@@ -1,0 +1,84 @@
+name: Deploy Quartz site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - v5
+  workflow_dispatch: # Allows manual triggering from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout Quartz engine repository
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Fetch all history for git info
+      
+      # Step 2: Checkout content repository into a subdirectory
+      - name: Checkout content repository
+        uses: actions/checkout@v6
+        with:
+          repository: parhamf6/sec-playbook
+          path: content # Content will be placed in ./content/
+      
+      # Step 3: Setup Node.js
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      
+      # Step 4: Cache dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      # Step 5: Cache Quartz plugins
+      - name: Cache Quartz plugins
+        uses: actions/cache@v5
+        with:
+          path: .quartz/plugins
+          key: ${{ runner.os }}-plugins-${{ hashFiles('quartz.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-plugins-
+      
+      # Step 6: Install Dependencies
+      - name: Install Dependencies
+        run: npm ci
+      
+      # Step 7: Install Quartz plugins
+      - name: Install Quartz plugins
+        run: npx quartz plugin install
+      
+      # Step 8: Build Quartz site with content from the subdirectory
+      - name: Build Quartz
+        run: npx quartz build -d content
+      
+      # Step 9: Upload artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
