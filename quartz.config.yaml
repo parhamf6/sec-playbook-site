@@ -148,6 +148,8 @@ plugins:
     enabled: true
   - source: "@quartz-community/og-image"
     enabled: true
+    options:
+      colorScheme: darkMode
   - source: "@quartz-community/cname"
     enabled: true
   - source: "@quartz-community/canvas-page"
@@ -158,6 +160,8 @@ plugins:
     enabled: true
   - source: "@quartz-community/tag-page"
     enabled: true
+    options:
+      numPages: 50
   - source: "@quartz-community/explorer"
     enabled: true
     layout:
@@ -231,13 +235,13 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/jackyzha0/quartz
-        Discord Community: https://discord.gg/cRFFHYye7t
+        GitHub: https://github.com/parhamf6/sec-playbook
+        Parhamf6: https://github.com/parhamf6
     layout:
       position: footer
       priority: 50
   - source: "@quartz-community/recent-notes"
-    enabled: false
+    enabled: true
   - source: "@quartz-community/spacer"
     enabled: true
     options: {}
@@ -277,6 +281,11 @@ plugins:
       enableInteraction: true
       darkMode: auto
       exportPadding: 20
+    order: 50
+  - source: github:quartz-community/tag-page
+    enabled: true
+    options:
+      numPages: 10
     order: 50
 layout:
   groups:
