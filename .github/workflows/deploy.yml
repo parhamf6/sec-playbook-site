@@ -20,25 +20,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Step 1: Checkout Quartz engine repository
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Fetch all history for git info
       
       # Step 2: Checkout content repository into a subdirectory
       - name: Checkout content repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: parhamf6/sec-playbook
           path: content # Content will be placed in ./content/
       
       # Step 3: Setup Node.js
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
       
       # Step 4: Cache dependencies
       - name: Cache dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -47,7 +47,7 @@ jobs:
       
       # Step 5: Cache Quartz plugins
       - name: Cache Quartz plugins
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .quartz/plugins
           key: ${{ runner.os }}-plugins-${{ hashFiles('quartz.lock.json') }}
@@ -68,7 +68,7 @@ jobs:
       
       # Step 9: Upload artifact
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: public
 
@@ -81,5 +81,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 # Workflow trigger
