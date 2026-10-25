@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: parhamf6.github.io/sec-playbook-site
+  baseUrl: sec-playbook.parhamforati.com
   ignorePatterns:
     - private
     - templates
